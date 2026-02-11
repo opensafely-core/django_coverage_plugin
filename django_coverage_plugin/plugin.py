@@ -117,6 +117,8 @@ class DjangoTemplatePlugin(
     def __init__(self, options):
         extensions = options.get("template_extensions", "html,htm,txt")
         self.extensions = [e.strip() for e in extensions.split(",")]
+        
+        self.exclude_blocks = options.get("exclude_blocks")
 
         self.exclude_blocks = options.get("exclude_blocks")
 
@@ -326,6 +328,12 @@ class FileReporter(coverage.plugin.FileReporter):
                 if extends and not inblock:
                     # In an inheriting template, ignore all tags outside of
                     # blocks.
+                    continue
+                
+                # Ignore any block token content that has been explcitly
+                # excluded in config
+                if self.exclude_block_token(token):
+                    self._excluded.add(token.lineno)
                     continue
 
                 # Ignore any block token content that has been explcitly
