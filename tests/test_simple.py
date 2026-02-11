@@ -287,7 +287,7 @@ class ExcludeTest(DjangoPluginTestCase):
             [django_coverage_plugin]
             exclude_blocks = [".+foo.+"]
             """)
-        
+
         text = self.run_django_coverage()
         self.assertEqual(text, "First\n\n    bar\n\nLast\n")
         self.assert_analysis([1, 3, 5])
